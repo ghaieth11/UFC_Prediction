@@ -48,29 +48,29 @@ data_train_pca$Winner <- data_train_scaled$Winner
 data_test_pca$Winner  <- data_test_scaled$Winner
 
 
+
 ```
 
 ```{r}
-
 # Entraînement du modèle Naïve Bayes sur les données transformées
-nb_model <- naiveBayes(Winner ~ ., data = data_train_pca)
+model_nb <- naiveBayes(Winner ~ ., data = data_train_pca)
 
 # Prédictions des probabilités sur le jeu de test
-pred_prob <- predict(nb_model, data_test_pca, type = "raw")[, 2]
+pred_nb_prob <- predict(model_nb, data_test_pca, type = "raw")[, 2]
 
 # Conversion des probabilités en classes binaires avec un seuil de 0.5
-predictions <- ifelse(pred_prob > 0.5, 1, 0)
+pred_nb <- ifelse(pred_nb_prob > 0.5, 1, 0)
 
 # Évaluation du modèle via la matrice de confusion
-conf_matrix <- confusionMatrix(as.factor(predictions), data_test_pca$Winner)
+conf_matrix_nb <- confusionMatrix(as.factor(pred_nb), data_test_pca$Winner)
 
 # Calcul de l'erreur absolue moyenne (MAE)
-mae <- mean(abs(predictions - as.numeric(as.character(data_test_pca$Winner))))
+mae_nb <- mean(abs(pred_nb - as.numeric(as.character(data_test_pca$Winner))))
 
 # Affichage des résultats
-print(conf_matrix)
-print(paste("Accuracy Naïve Bayes avec PCA :", round(conf_matrix$overall["Accuracy"] * 100, 2), "%"))
-print(paste("MAE Naïve Bayes avec PCA :", round(mae, 4)))
+print(conf_matrix_nb)
+print(paste("Accuracy Naïve Bayes avec PCA :", round(conf_matrix_nb$overall["Accuracy"] * 100, 2), "%"))
+print(paste("MAE Naïve Bayes avec PCA :", round(mae_nb, 4)))
 
 
 
